@@ -1,10 +1,37 @@
 
 
-    function parcourir(){
-        for (let i =0; i<10 ; i++){
+class LoadPicture{
+    constructor(params){
+        this.url = params.url;
+        this.area = params.area ?? '.photo';
+
+        /**
+         * @var {Element} areaDom zone du DOM où générer le slider : Objet du DOM
+         */
+        this.areaDom = null;
+
+        this.numberPhoto = params.numberPhoto ?? 10
+
+        this.createInterface()
+        this.parcourir()
+
+
+
+    }
+
+    createInterface(){
+
+        this.areaDom = document.querySelector(this.area);
+        const suivant = document.createElement('button');
+        suivant.innerHTML = 'suivant';
+        this.areaDom.appendChild(suivant);
+    }
+    parcourir(){
+        
+        for (let i =0; i<this.numberPhoto ; i++){
             const id = i
             
-            const url = `https://jsonplaceholder.typicode.com/photos?id=${id}`;
+            const url = `${this.url}?id=${id}`;
             
             // Récupérer les données de la photo
             fetch(url)
@@ -20,9 +47,8 @@
                 const imageElement = document.createElement('img');
                 imageElement.src = imageUrl;
                 ;
-                const div = document.createElement("div")
-                document.body.appendChild(div)
-                div.appendChild(imageElement);
+                
+                this.areaDom.appendChild(imageElement);
                 
                 // Afficher l'URL de l'image dans la console et sur la page
                 console.log("L'URL de l'image est : ", imageUrl);
@@ -35,11 +61,12 @@
                 
         }
     }
+}
+    
+    
         
-        parcourir()
+        /*parcourir()
         
-        const suivant = document.createElement('button');
-        suivant.innerHTML = 'suivant';
         suivant.addEventListener('click', parcourir10() 
             // Vous pouvez ajouter des actions à effectuer lorsque le bouton est cliqué ici
             );
@@ -96,4 +123,8 @@
                 console.error(`Une erreur s'est produite : ${e.message}`)
             }
         }
-        getUrl()
+        getUrl()*/
+        const pictures = new LoadPicture({
+            url: 'https://jsonplaceholder.typicode.com/photos',
+            numberPhoto : 20,
+        });

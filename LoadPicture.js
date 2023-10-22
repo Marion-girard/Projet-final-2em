@@ -32,7 +32,7 @@ class LoadPicture {
         /**
          * @var {Element} currentImage image courante (element du DOM)
          */
-        this.currentImage = new Image();
+        this.images = [];
 
 
         /**
@@ -56,7 +56,7 @@ class LoadPicture {
         this.createInterface();
         
         
-        
+        this.getUrl();
 
     }
     
@@ -87,16 +87,14 @@ class LoadPicture {
         
 
         // On ajoute tout ça à la div content du SLIDER
-        this.divSlider.append(this.btnmore, this.btnPrev, this.currentImage);
+        this.divSlider.append(this.btnmore, this.currentImage);
 
         // On ajoute tout ça dans le DOM dans l'area proposée
         this.areaDom.appendChild(this.divSlider);
 
-        // On met à jour l'image 
-        this.updateImage();
+        
     }
 
-    
     /**
      * Image suivante
     */
@@ -128,29 +126,44 @@ class LoadPicture {
      * Mise à jour de l'image dans le DOM
      */
     /*
-    updateImage() {   
-        this.currentImage.src = this.images[this.indexCurrentImage].src;
-        this.currentImage.title = this.images[this.indexCurrentImage].title;
-        
-        this.currentImage.onerror = ()=> {
-            throw new Error(`Image impossible à charger ${this.images[this.indexCurrentImage].src}`)
-        }
-    }
     */
    /**
     * Affichage des erreurs
    */
-   /*
-   displayError(e){
-        const errorDiv = document.createElement('div');
-        errorDiv.classList.add('error');
-        
-        errorDiv.textContent = e.toString();
-        
-        document.body.prepend(errorDiv);
+  /*
+  displayError(e){
+      const errorDiv = document.createElement('div');
+       errorDiv.classList.add('error');
+       
+       errorDiv.textContent = e.toString();
+       
+       document.body.prepend(errorDiv);
     }
- */
+    */
+    updateImage() {
+        if (this.images.length > 0) {
+            this.currentImage.src = this.images[0].src;
+            this.currentImage.onerror = () => {
+                throw new Error(`Image impossible à charger ${this.images[0].src}`);
+            };
+        }
+    }
+async getUrl(){
+    try{
+        for (let i =0; i<10 ; i++){
+            const id = i +1
+            let responseImg = await fetch (`${this.url}?id=${id}`)
+            let img =  await responseImg.json()
+            let imgUrl = (img[0]?.url);
+            this.images.push({ src: imgUrl });
+        }
+    }
+    catch(e){
+        console.error(`Une erreur s'est produite : ${e.message}`)
+    }
 }
+}
+
 const pictures = new LoadPicture({
     url: 'https://jsonplaceholder.typicode.com/photos',
     area: 'main section.photo',
