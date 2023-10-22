@@ -22,9 +22,16 @@ class LoadPicture{
     createInterface(){
 
         this.areaDom = document.querySelector(this.area);
-        const suivant = document.createElement('button');
-        suivant.innerHTML = 'suivant';
-        this.areaDom.appendChild(suivant);
+
+        if (!this.areaDom)
+        throw new Error(`SLIDER : la zone du DOM "${this.area}" n'existe pas dans le document HTML`)
+
+
+        this.suivant = document.createElement('button');
+        this.suivant.innerHTML = 'suivant';
+        this.suivant.addEventListener('click', ()=>{this.parcourirNuberPhoto()}); // exemple avec fonction fléchée (pas de changement de contexte) + appel de next
+
+        this.areaDom.appendChild(this.suivant);
     }
     parcourir(){
         
@@ -51,10 +58,46 @@ class LoadPicture{
                 this.areaDom.appendChild(imageElement);
                 
                 // Afficher l'URL de l'image dans la console et sur la page
-                console.log("L'URL de l'image est : ", imageUrl);
+                /*console.log("L'URL de l'image est : ", imageUrl);
                 const urlElement = document.createElement('p');
                 urlElement.textContent = `L'URL de l'image est : ${imageUrl}`;
-                document.body.appendChild(urlElement); // Ajoute l'élément au corps du document
+                document.body.appendChild(urlElement);*/ // Ajoute l'élément au corps du document
+                })
+                .catch(error => console.error('Une erreur s\'est produite lors de la récupération des données de la photo', error));
+        
+                
+        }
+    }
+
+    parcourirNuberPhoto(){
+        
+        for (let i = this.numberPhoto; i<this.numberPhoto ; i++){
+            const id = i
+            
+            const url = `${this.url}?id=${id}`;
+            
+            // Récupérer les données de la photo
+            fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur de réseau ou de réponse non valide');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const imageUrl = data[0].url; // Récupérer l'URL de l'image à partir des données
+            
+                const imageElement = document.createElement('img');
+                imageElement.src = imageUrl;
+                ;
+                
+                this.areaDom.appendChild(imageElement);
+                
+                // Afficher l'URL de l'image dans la console et sur la page
+                /*console.log("L'URL de l'image est : ", imageUrl);
+                const urlElement = document.createElement('p');
+                urlElement.textContent = `L'URL de l'image est : ${imageUrl}`;
+                document.body.appendChild(urlElement);*/ // Ajoute l'élément au corps du document
                 })
                 .catch(error => console.error('Une erreur s\'est produite lors de la récupération des données de la photo', error));
         
@@ -126,5 +169,7 @@ class LoadPicture{
         getUrl()*/
         const pictures = new LoadPicture({
             url: 'https://jsonplaceholder.typicode.com/photos',
-            numberPhoto : 20,
+            numberPhoto: 10,
+            
+
         });
