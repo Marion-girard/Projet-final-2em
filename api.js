@@ -1,20 +1,5 @@
 
-/*const photoUrl = 'https://jsonplaceholder.typicode.com/photos';
-let id = null
-// Récupérer la photo
-fetch(photoUrl)
-.then((response) =>  response.json())
-.then((photo) => {
-        url =photo[1].url;
-       
-        return fetch(`https://jsonplaceholder.typicode.com/photo?url=${url}`)
-    })
-    .catch(error => console.error('Une erreur s\'est produite lors de la récupération des données de la photo', error));
 
-    
-    const img = document.createElement("img")
-    img.src='https://jsonplaceholder.typicode.com/photo?url=${url}'
-    div.appendChild(img)*/
     function parcourir(){
         for (let i =0; i<10 ; i++){
             const id = i
@@ -97,3 +82,18 @@ fetch(photoUrl)
                     
             }
         }
+
+        async function getUrl(){
+            try{
+                for (let i =0; i<10 ; i++){
+                    const id = i
+                    let responseImg = await fetch (`https://jsonplaceholder.typicode.com/photos?id=${id}`)
+                    let imgUrl =  await responseImg.json()
+                    console.log(imgUrl[0]?.url);
+                }
+            }
+            catch(e){
+                console.error(`Une erreur s'est produite : ${e.message}`)
+            }
+        }
+        getUrl()
