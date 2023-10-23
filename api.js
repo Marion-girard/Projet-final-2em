@@ -12,9 +12,10 @@ class LoadPicture{
 
         this.numberPhoto = params.numberPhoto ?? 10
 
+        this.loadingImage = null;
         this.createInterface()
-        this.parcourir()
         
+        this.getUrl()
 
 
 
@@ -28,142 +29,112 @@ class LoadPicture{
             this.container = document.createElement('div');
             this.areaDom.appendChild(this.container);
         
-            // Création d'une nouvelle div pour le bouton suivant
-            this.buttonContainer = document.createElement('div');
-            this.areaDom.appendChild(this.buttonContainer);
-        
-            this.suivant = document.createElement('button');
-            this.suivant.innerHTML = 'suivant';
-            this.buttonContainer.appendChild(this.suivant);
-            this.suivant.addEventListener('click', () => this.parcourir10());
-        
-    
-    }
-    parcourir(){
-        
-        for (let i =0; i<this.numberPhoto ; i++){
-            const id = i
+            this.loadingImage = document.createElement('img');
+            this.loadingImage.src = 'imageLoad';
+            this.loadingImage.alt = 'Loading...';
+            this.loadingImage.id = 'loadingImage';
+            this.loadingImage.style.display = 'none'; // Masquer l'image de chargement par défaut
+            this.areaDom.appendChild(this.loadingImage);
             
-            const url = `${this.url}?id=${id}`;
-            
-            // Récupérer les données de la photo
-            fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur de réseau ou de réponse non valide');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const imageUrl = data[0].url; // Récupérer l'URL de l'image à partir des données
-                const imageElement = document.createElement('img');
-                imageElement.src = imageUrl;
-                this.container.appendChild(imageElement);
-                
-                // Afficher l'URL de l'image dans la console et sur la page
-                /*console.log("L'URL de l'image est : ", imageUrl);
-                const urlElement = document.createElement('p');
-                urlElement.textContent = `L'URL de l'image est : ${imageUrl}`;
-                document.body.appendChild(urlElement);*/ // Ajoute l'élément au corps du document
-                })
-                .catch(error => console.error('Une erreur s\'est produite lors de la récupération des données de la photo', error));
-        
-                
         }
-    }
-
-    /*parcourirNuberPhoto(){
-        console.log("10 de plus")
-        for (let i = this.numberPhoto; i<this.numberPhoto ; i++){
-            const id = i
-            
-            const url = `${this.url}?id=${id}`;
-            
-            // Récupérer les données de la photo
-            fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur de réseau ou de réponse non valide');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const imageUrl = data[0].url; // Récupérer l'URL de l'image à partir des données
-            
-                const imageElement = document.createElement('img');
-                imageElement.src = imageUrl;
-                
-                
-                this.areaDom.appendChild(imageElement);
-                */
-                // Afficher l'URL de l'image dans la console et sur la page
-                /*console.log("L'URL de l'image est : ", imageUrl);
-                const urlElement = document.createElement('p');
-                urlElement.textContent = `L'URL de l'image est : ${imageUrl}`;
-                document.body.appendChild(urlElement);*/ // Ajoute l'élément au corps du document
-                /* })
-                .catch(error => console.error('Une erreur s\'est produite lors de la récupération des données de la photo', error));
         
-                
-            }
-        }*/
-    parcourir10(){
-        for (let i =10; i<20 ; i++){
-            const id = i
-            
-            const url = `https://jsonplaceholder.typicode.com/photos?id=${id}`;
-            
-            // Récupérer les données de la photo
-            fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur de réseau ou de réponse non valide');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const imageUrl = data[0].url; // Récupérer l'URL de l'image à partir des données
-            
-                const imageElement = document.createElement('img');
-                imageElement.src = imageUrl;
-                this.container.appendChild(imageElement);
-                /*const div = document.createElement("div")
-                document.body.appendChild(div)
-                div.appendChild(imageElement);*/
-                
-                // Afficher l'URL de l'image dans la console et sur la page
-                /*console.log("L'URL de l'image est : ", imageUrl);
-                const urlElement = document.createElement('p');
-                urlElement.textContent = `L'URL de l'image est : ${imageUrl}`;
-                document.body.appendChild(urlElement); // Ajoute l'élément au corps du document*/
-                })
-                .catch(error => console.error('Une erreur s\'est produite lors de la récupération des données de la photo', error));
-        
-                
+        showLoadingImage() {
+            this.loadingImage.style.display = 'block';
         }
-    }
-}
     
-    
-    
-        /*async function getUrl(){
+        hideLoadingImage() {
+            this.loadingImage.style.display = 'none';
+        }
+        async getUrl(){
             try{
-                for (let i =0; i<10 ; i++){
+                for (let i =0; i<this.numberPhoto ; i++){
                     const id = i
                     let responseImg = await fetch (`https://jsonplaceholder.typicode.com/photos?id=${id}`)
                     let imgUrl =  await responseImg.json()
-                    console.log(imgUrl[0]?.url);
+                    let url = imgUrl[0]?.url;
+                    const imageElement = document.createElement('img');
+                    imageElement.src = url;
+                    this.container.appendChild(imageElement);
+                    this.hideLoadingImage();
                 }
+                this.buttonContainer = document.createElement('div');
+                this.areaDom.appendChild(this.buttonContainer);
+            
+                this.suivant = document.createElement('button');
+                this.suivant.innerHTML = 'suivant';
+                this.buttonContainer.appendChild(this.suivant);
+                this.suivant.addEventListener('click', () => this.getUrl10());
+            }
+            catch(e){
+                console.error(`Une erreur s'est produite : ${e.message}`)
+                this.hideLoadingImage();
+            }
+        }
+
+        async getUrl10(){
+            try{
+                for (let i =this.numberPhoto; i<(10+this.numberPhoto) ; i++){
+                    const id = i
+                    let responseImg = await fetch (`https://jsonplaceholder.typicode.com/photos?id=${id}`)
+                    let imgUrl =  await responseImg.json()
+                    let url = imgUrl[0]?.url;
+                    const imageElement = document.createElement('img');
+                    imageElement.src = url;
+                    this.container.appendChild(imageElement);
+                    this.hideLoadingImage();
+
+
+                }
+                this.buttonContainer = document.createElement('div');
+                this.areaDom.appendChild(this.buttonContainer);
+            
+                this.suivant = document.createElement('button');
+                this.suivant.innerHTML = 'suivant';
+                this.buttonContainer.appendChild(this.suivant);
+                this.suivant.addEventListener('click', () => this.getUrl10());
+            }
+            catch(e){
+                console.error(`Une erreur s'est produite : ${e.message}`)
+                this.hideLoadingImage();
+            }
+        }
+
+        async getUrl20(){
+            try{
+                for (let i =(this.numberPhoto+10); i<(20+this.numberPhoto) ; i++){
+                    const id = i
+                    let responseImg = await fetch (`https://jsonplaceholder.typicode.com/photos?id=${id}`)
+                    let imgUrl =  await responseImg.json()
+                    let url = imgUrl[0]?.url;
+                    const imageElement = document.createElement('img');
+                    imageElement.src = url;
+                    this.container.appendChild(imageElement);
+
+
+                }
+                this.buttonContainer = document.createElement('div');
+                this.areaDom.appendChild(this.buttonContainer);
+            
+                this.suivant = document.createElement('button');
+                this.suivant.innerHTML = 'suivant';
+                this.buttonContainer.appendChild(this.suivant);
+                this.suivant.addEventListener('click', () => this.getUrl10());
             }
             catch(e){
                 console.error(`Une erreur s'est produite : ${e.message}`)
             }
         }
-        getUrl()*/
+   
+    
+    
+}
+    
+    
+    
         const pictures = new LoadPicture({
             url: 'https://jsonplaceholder.typicode.com/photos',
             numberPhoto: 10,
-            area : 'main section.photo',
+            
             
 
         });
