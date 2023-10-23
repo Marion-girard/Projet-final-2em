@@ -22,18 +22,20 @@ class LoadPicture{
 
     createInterface(){
 
-        this.areaDom = document.querySelector(this.area);
-
-        if (!this.areaDom)
-        throw new Error(`SLIDER : la zone du DOM "${this.area}" n'existe pas dans le document HTML`)
-
-        this.container = document.createElement('div');
-        this.areaDom.appendChild(this.container);
-
-        this.suivant = document.createElement('button');
-        this.suivant.innerHTML = 'suivant';
-        this.container.appendChild(this.suivant);
-        this.suivant.addEventListener('click',() => this.parcourir10()); // exemple avec fonction fléchée (pas de changement de contexte) + appel de next
+            this.areaDom = document.querySelector(this.area);
+            if (!this.areaDom) throw new Error(`SLIDER : la zone du DOM "${this.area}" n'existe pas dans le document HTML`);
+        
+            this.container = document.createElement('div');
+            this.areaDom.appendChild(this.container);
+        
+            // Création d'une nouvelle div pour le bouton suivant
+            this.buttonContainer = document.createElement('div');
+            this.areaDom.appendChild(this.buttonContainer);
+        
+            this.suivant = document.createElement('button');
+            this.suivant.innerHTML = 'suivant';
+            this.buttonContainer.appendChild(this.suivant);
+            this.suivant.addEventListener('click', () => this.parcourir10());
         
     
     }
@@ -54,11 +56,8 @@ class LoadPicture{
             })
             .then(data => {
                 const imageUrl = data[0].url; // Récupérer l'URL de l'image à partir des données
-            
                 const imageElement = document.createElement('img');
                 imageElement.src = imageUrl;
-                
-                
                 this.container.appendChild(imageElement);
                 
                 // Afficher l'URL de l'image dans la console et sur la page
@@ -102,7 +101,7 @@ class LoadPicture{
                 const urlElement = document.createElement('p');
                 urlElement.textContent = `L'URL de l'image est : ${imageUrl}`;
                 document.body.appendChild(urlElement);*/ // Ajoute l'élément au corps du document
-               /* })
+                /* })
                 .catch(error => console.error('Une erreur s\'est produite lors de la récupération des données de la photo', error));
         
                 
@@ -142,22 +141,12 @@ class LoadPicture{
         
                 
         }
-}
     }
+}
     
     
-        
-        /*parcourir()
-        
-        suivant.addEventListener('click', parcourir10() 
-            // Vous pouvez ajouter des actions à effectuer lorsque le bouton est cliqué ici
-            );
-        
-        // Ajouter le bouton à la page
-        document.body.appendChild(suivant);
-        */
-/*
-        async function getUrl(){
+    
+        /*async function getUrl(){
             try{
                 for (let i =0; i<10 ; i++){
                     const id = i
@@ -174,7 +163,9 @@ class LoadPicture{
         const pictures = new LoadPicture({
             url: 'https://jsonplaceholder.typicode.com/photos',
             numberPhoto: 10,
-            
+            area : 'main section.photo',
             
 
         });
+
+        

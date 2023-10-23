@@ -1,0 +1,12 @@
+.photo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    }
+
+    .photo img {
+        
+    width: 10%;
+    height: auto;
+    margin: 5px;
+    }
