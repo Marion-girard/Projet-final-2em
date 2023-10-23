@@ -10,3 +10,8 @@
     height: auto;
     margin: 5px;
     }
+
+    .load
+{
+    background:url('imageLoad.jpg') no-repeat center;
+}
